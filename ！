@@ -1,0 +1,45 @@
+$(document).ready(function() {
+    // 淡入淡出效果
+    $('.product-item').hide().fadeIn(2000);
+
+    // 表单验证
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', function(event) {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (name === '' || email === '' || message === '') {
+            alert('所有字段都是必填的。');
+            event.preventDefault();
+        } else if (!validateEmail(email)) {
+            alert('请输入有效的邮箱地址。');
+            event.preventDefault();
+        }
+    });
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // AJAX 获取数据
+    $('#loadData').click(function() {
+        $.ajax({
+            url: 'data.json', // 替换为您的数据源 URL
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let html = '<ul>';
+                data.forEach(function(item) {
+                    html += `<li>${item.name}: ${item.value}</li>`;
+                });
+                html += '</ul>';
+                $('#dataContainer').html(html);
+            },
+            error: function() {
+                alert('数据加载失败');
+            }
+        });
+    });
+});
